@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import User from "../Model/User";
 import jwt from "jsonwebtoken";
 import logger from "../logger";
-import crypto from "crypto";
 import { decryptPassword } from "../Middleware/auth";
 
 export const login = async (req: Request, res: Response) => {
@@ -49,7 +48,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    const token = crypto.randomBytes(20).toString("hex");
+    //const token = crypto.randomBytes(20).toString("hex");
     // user.resetPasswordToken = token;
     // user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
     // await user.save();

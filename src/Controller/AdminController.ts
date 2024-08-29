@@ -17,7 +17,7 @@ export const getJobs = async (req: Request, res: Response) => {
     });
     const totalEmployees = await Job.count(); // Get the total number of employees
     const totalPages = Math.ceil(totalEmployees / limit);
-    const totalJobs = await Job.count();
+    //const totalJobs = await Job.count();
     res.status(200).json({
       jobs,
       meta: {
@@ -37,7 +37,7 @@ export const getJobs = async (req: Request, res: Response) => {
 export const addEmployee = async (req: Request, res: Response) => {
   const { name, email, password, role } = req.body;
   try {
-    let hashedPassword = encryptedPassword(password);
+    const hashedPassword = encryptedPassword(password);
     console.log(hashedPassword);
     const newEmployee = await Employee.create({
       username: name,

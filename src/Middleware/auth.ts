@@ -51,7 +51,7 @@ const decryptPassword = (encryptedPassword: string) => {
   const algorithm = "aes-256-cbc";
   const key = Buffer.from(process.env.ENCRYPTION_KEY || "", "hex");
   const iv = Buffer.from(process.env.IV || "", "hex");
-  let decipher = crypto.createDecipheriv(algorithm, key, iv);
+  const decipher = crypto.createDecipheriv(algorithm, key, iv);
   let decrypted = decipher.update(encryptedPassword, "hex", "utf8");
   decrypted += decipher.final("utf8");
   return decrypted;

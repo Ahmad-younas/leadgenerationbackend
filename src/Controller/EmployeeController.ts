@@ -46,7 +46,7 @@ export const addLeads = async (req: Request, res: Response) => {
     serviceType,
     assessmentDate,
     notes,
-    userId,
+    //userId,
   } = req.body;
   try {
     const newJob = await Job.create({
