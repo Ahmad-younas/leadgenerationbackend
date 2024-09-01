@@ -3,6 +3,10 @@ import User from "../Model/User";
 import jwt from "jsonwebtoken";
 import logger from "../logger";
 import { decryptPassword } from "../Middleware/auth";
+import { Employee } from "../Model/model";
+import { sendResetPasswordEmail } from "../utils/sendResetPasswordEmail";
+import crypto from "crypto";
+import bycrypt from "bcrypt";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -43,17 +47,32 @@ export const login = async (req: Request, res: Response) => {
 export const requestPasswordReset = async (req: Request, res: Response) => {
   const { email } = req.body;
   try {
-    const user = await User.findOne({ where: { email } });
+    const user = await Employee.findOne({ where: { email } });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    //const token = crypto.randomBytes(20).toString("hex");
-    // user.resetPasswordToken = token;
+    // console.log(user);
+
+    const StringToken = crypto.randomBytes(20).toString("hex");
+    const token = await bycrypt.hash(StringToken, 10);
+    // user.resetPasswordToken = StringToken;
     // user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
+    console.log(user.resetPasswordToken);
+    console.log(user.resetPasswordExpires);
     // await user.save();
+    try {
+      user.setDataValue("resetPasswordToken", token);
+      user.setDataValue("resetPasswordExpires", new Date(Date.now() + 3600000)); // 1 hour from now
+
+      await user.save();
+
+      console.log("User saved successfully");
+    } catch (error) {
+      console.error("Error saving user:", error);
+    }
     //
-    // sendResetPasswordEmail(user.email, token);
+    await sendResetPasswordEmail("ahmadyounas2k18@gmail.com", token);
     res.json({ message: "Reset password email sent" });
   } catch (err) {
     if (err instanceof Error) {

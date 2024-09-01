@@ -8,6 +8,8 @@ interface UserAttributes {
   password: string;
   email: string;
   role: string;
+  resetPasswordToken?: string; // Add the resetPasswordToken property
+  resetPasswordExpires?: Date;
 }
 
 interface UserCreationAttributes extends Optional<UserAttributes, "id"> {}
@@ -22,6 +24,8 @@ class Employee
   public password!: string;
   public email!: string;
   public role!: string;
+  public resetPasswordToken?: string | undefined;
+  public resetPasswordExpires?: Date | undefined;
 
   public getId(): number {
     return this.id;
@@ -84,6 +88,14 @@ Employee.init(
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    resetPasswordToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
     },
   },
   {

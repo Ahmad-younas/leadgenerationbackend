@@ -41,9 +41,9 @@ export const addEmployee = async (req: Request, res: Response) => {
     console.log(hashedPassword);
     const newEmployee = await Employee.create({
       username: name,
-      email,
+      email: email,
       password: hashedPassword,
-      role,
+      role: role,
     });
     logger.info("Employee created");
     res
