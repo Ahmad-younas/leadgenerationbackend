@@ -52,21 +52,14 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // console.log(user);
-
     const StringToken = crypto.randomBytes(20).toString("hex");
     const token = await bycrypt.hash(StringToken, 10);
-    // user.resetPasswordToken = StringToken;
-    // user.resetPasswordExpires = new Date(Date.now() + 3600000); // 1 hour
-    console.log(user.resetPasswordToken);
-    console.log(user.resetPasswordExpires);
+
     // await user.save();
     try {
       user.setDataValue("resetPasswordToken", token);
       user.setDataValue("resetPasswordExpires", new Date(Date.now() + 3600000)); // 1 hour from now
-
       await user.save();
-
       console.log("User saved successfully");
     } catch (error) {
       console.error("Error saving user:", error);
