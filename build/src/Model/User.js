@@ -1,77 +1,88 @@
 "use strict";
+var __importDefault =
+  (this && this.__importDefault) ||
+  function (mod) {
+    return mod && mod.__esModule ? mod : { default: mod };
+  };
 Object.defineProperty(exports, "__esModule", { value: true });
 const sequelize_1 = require("sequelize");
-const DbConnection_1 = require("../DbConnection");
+const DbConnection_1 = __importDefault(require("../DbConnection"));
+
 class User extends sequelize_1.Model {
-    _id;
-    get id() {
-        return this._id;
-    }
-    _username;
-    get username() {
-        return this._username;
-    }
-    set username(value) {
-        this._username = value;
-    }
-    _password;
-    get password() {
-        return this._password;
-    }
-    set password(value) {
-        this._password = value;
-    }
-    _role;
-    get role() {
-        return this._role;
-    }
-    set role(value) {
-        this._role = value;
-    }
+  // We don't declare fields here to avoid shadowing Sequelize's getters and setters
+  id;
+  username;
+  password;
+  email;
+  role;
+
+  getId() {
+    return this.id;
+  }
+
+  getUsername() {
+    return this.username;
+  }
+
+  setUsername(value) {
+    this.username = value;
+  }
+
+  getPassword() {
+    return this.password;
+  }
+
+  setPassword(value) {
+    this.password = value;
+  }
+
+  getRole() {
+    return this.role;
+  }
+
+  setRole(value) {
+    this.role = value;
+  }
+
+  getEmail() {
+    return this.email;
+  }
+
+  setEmail(value) {
+    this.email = value;
+  }
 }
-User.init({
+
+User.init(
+  {
     id: {
-        type: sequelize_1.DataTypes.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-        get() {
-            return this.id;
-        },
+      type: sequelize_1.DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
     username: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        get() {
-            return this.username;
-        },
-        set(value) {
-            this.username = value;
-        },
+      type: sequelize_1.DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
     password: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-        get() {
-            return this.password;
-        },
-        set(value) {
-            this.password = value;
-        },
+      type: sequelize_1.DataTypes.STRING,
+      allowNull: false,
     },
     role: {
-        type: sequelize_1.DataTypes.STRING,
-        allowNull: false,
-        get() {
-            return this.role;
-        },
-        set(value) {
-            this.role = value;
-        },
+      type: sequelize_1.DataTypes.STRING,
+      allowNull: false,
     },
-}, {
-    sequelize: DbConnection_1.sequelize,
+    email: {
+      type: sequelize_1.DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+  },
+  {
+    sequelize: DbConnection_1.default,
     tableName: "users",
     timestamps: false,
-});
+  },
+);
 exports.default = User;

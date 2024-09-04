@@ -36,7 +36,6 @@ export const sendResetPasswordEmail = async (
       to: to, // Recipient address
       subject: "Password Reset Request",
       html: `
-       html: \`
         <div style="font-family: Arial, sans-serif; font-size: 16px; color: #333;">
           <h2>Password Reset Request</h2>
           <p>You have requested a password reset. Click the link below to reset your password:</p>
@@ -53,7 +52,6 @@ export const sendResetPasswordEmail = async (
           <p>Best regards,</p>
           <p>Your Company Team</p>
         </div>
-      \`,
 
       `,
     };

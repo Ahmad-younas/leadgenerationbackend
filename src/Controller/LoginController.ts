@@ -2,11 +2,11 @@ import { Request, Response } from "express";
 import User from "../Model/User";
 import jwt from "jsonwebtoken";
 import logger from "../logger";
-import { decryptPassword } from "../Middleware/auth";
+import { decryptPassword, encryptedPassword } from "../Middleware/auth";
 import { Employee } from "../Model/model";
 import { sendResetPasswordEmail } from "../utils/sendResetPasswordEmail";
 import crypto from "crypto";
-import bycrypt from "bcrypt";
+import bcrypt from "bcrypt";
 
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -53,7 +53,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     }
 
     const StringToken = crypto.randomBytes(20).toString("hex");
-    const token = await bycrypt.hash(StringToken, 10);
+    const token = await bcrypt.hash(StringToken, 10);
 
     // await user.save();
     try {
@@ -74,5 +74,46 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
       logger.error("An unknown error occurred");
     }
     res.status(500).json({ message: "Server error", error: String(err) });
+  }
+};
+
+/**
+ * Resets the user's password using the reset token.
+ * @param req - Express request object
+ * @param res - Express response object
+ */
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token, newPassword } = req.body; // Get the token and new password from the request body
+
+  try {
+    // Find the user by reset token
+    const user = await Employee.findOne({
+      where: { resetPasswordToken: token },
+    });
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "Invalid or expired reset token" });
+    }
+
+    // Check if the reset token has expired
+    if (user.resetPasswordExpires && user.resetPasswordExpires <= new Date()) {
+      return res.status(400).json({ message: "Reset token has expired" });
+    }
+
+    // Hash the new password
+    const hashedPassword = encryptedPassword(newPassword);
+    // Update the user's password and clear the reset token/expiry
+    user.setDataValue("password", hashedPassword);
+    user.setDataValue("resetPasswordToken", null);
+    user.setDataValue("resetPasswordExpires", null);
+
+    await user.save();
+
+    res.json({ message: "Password reset successfully" });
+  } catch (error) {
+    console.error("Error resetting password:", error);
+    res.status(500).json({ message: "Server error", error });
   }
 };
