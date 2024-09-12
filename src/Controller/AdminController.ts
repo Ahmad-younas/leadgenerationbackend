@@ -163,17 +163,17 @@ export const getMonthlyJobCounts = async (req: Request, res: Response) => {
       include: [
         {
           model: Job,
+          as: "jobs",
           attributes: [], // We don't need to select any specific job fields here
           required: false, // LEFT JOIN behavior
           where: {
-            year: "2024",
+            year: new Date().getFullYear(),
           },
         },
       ],
       group: ["Month.month_name"],
       order: [["id", "ASC"]],
     });
-
     res.status(200).json(results);
   } catch (err) {
     if (err instanceof Error) {
@@ -205,8 +205,6 @@ export const getEmployeeInfoAndEmployeeJobInfo = async (
         message: "Employee or Employee Job not found",
       });
     }
-
-    // If both exist, return the information
     res.status(200).json({
       employeeInfo,
       employeeJobInfo,
@@ -219,5 +217,51 @@ export const getEmployeeInfoAndEmployeeJobInfo = async (
     res
       .status(500)
       .json({ message: "Error retrieving employee information", err });
+  }
+};
+
+export const getEmployeeWithJobInfo = async (req: Request, res: Response) => {
+  try {
+    const usersWithJobs = await Employee.findAll({
+      attributes: ["username", "password", "role", "email"], // Specify the fields from the Users table
+      include: [
+        {
+          model: Job,
+          as: "jobs", // Include the EmployeeJobs model
+          attributes: [
+            "title",
+            "firstName",
+            "lastName",
+            "dateOfBirth",
+            "email",
+            "contactNumber",
+            "address",
+            "postcode",
+            "landlordName",
+            "landlordContactNumber",
+            "landlordEmail",
+            "heatingType",
+            "propertyType",
+            "epcRating",
+            "serviceType",
+            "assessmentDate",
+            "notes",
+            "user_id",
+            "month",
+            "year",
+          ],
+          required: true, // Performs an INNER JOIN
+        },
+      ],
+    });
+
+    // Send the result as a response
+    res.status(200).json(usersWithJobs);
+  } catch (error) {
+    console.error("Error fetching employee with job info:", error);
+    res.status(500).json({
+      message: "Failed to fetch employee with job information",
+      error: error,
+    });
   }
 };

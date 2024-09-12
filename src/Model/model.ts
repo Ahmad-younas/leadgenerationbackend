@@ -4,7 +4,8 @@ import { Month } from "./Month";
 
 Employee.hasMany(Job, {
   foreignKey: "user_id",
-  as: "jobs", // Alias for the relationship
+  as: "jobs",
+  // Alias for the relationship
 });
 Job.belongsTo(Employee, {
   foreignKey: "user_id",
@@ -14,11 +15,13 @@ Job.belongsTo(Employee, {
 Month.hasMany(Job, {
   foreignKey: "month",
   sourceKey: "month_name",
+  as: "jobs",
 });
 
 Job.belongsTo(Month, {
   foreignKey: "month",
   targetKey: "month_name",
+  as: "monthDetail",
 });
 
 export { Employee, Job, Month };

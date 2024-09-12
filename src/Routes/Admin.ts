@@ -5,6 +5,7 @@ import {
   deleteEmployee,
   findAllEmployee,
   getEmployeeInfoAndEmployeeJobInfo,
+  getEmployeeWithJobInfo,
   getJobs,
   getMonthlyJobCounts,
   updateEmployee,
@@ -25,6 +26,12 @@ router.get(
 router.post(
   "/get-Employee-Info-And-Employee-Job-Info",
   getEmployeeInfoAndEmployeeJobInfo,
+  authorizeRole("admin"),
+);
+
+router.get(
+  "/getEmployeeWithJobInfo",
+  getEmployeeWithJobInfo,
   authorizeRole("admin"),
 );
 

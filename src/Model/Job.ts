@@ -6,7 +6,7 @@ interface employeeJob {
   title: string;
   firstName: string;
   lastName: string;
-  dateOfBirth: Date;
+  dateOfBirth: string;
   email: string;
   contactNumber: string;
   address: string;
@@ -21,11 +21,12 @@ interface employeeJob {
   propertyType: string;
   epcRating: string;
   serviceType: string;
-  assessmentDate: Date;
+  assessmentDate: string;
   notes: string;
   user_id: number;
   month: string;
   year: string;
+  status: string;
 }
 
 interface employeeJobsAttribute extends Optional<employeeJob, "id"> {}
@@ -38,7 +39,7 @@ class Job
   public title!: string;
   public firstName!: string;
   public lastName!: string;
-  public dateOfBirth!: Date;
+  public dateOfBirth!: string;
   public email!: string;
   public contactNumber!: string;
   public address!: string;
@@ -53,11 +54,12 @@ class Job
   public propertyType!: string;
   public epcRating!: string;
   public serviceType!: string;
-  public assessmentDate!: Date;
+  public assessmentDate!: string;
   public notes!: string;
   public user_id!: number;
   public month!: string;
   public year!: string;
+  public status!: string;
 }
 
 Job.init(
@@ -78,11 +80,11 @@ Job.init(
     },
     lastName: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     dateOfBirth: {
-      type: DataTypes.DATE,
-      allowNull: false,
+      type: DataTypes.STRING,
+      allowNull: true,
     },
     email: {
       type: DataTypes.STRING,
@@ -90,7 +92,7 @@ Job.init(
     },
     contactNumber: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     address: {
       type: DataTypes.STRING,
@@ -141,7 +143,11 @@ Job.init(
       allowNull: true,
     },
     assessmentDate: {
-      type: DataTypes.DATE,
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.STRING,
       allowNull: true,
     },
     notes: {

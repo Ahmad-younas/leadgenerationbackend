@@ -24,10 +24,11 @@ export const login = async (req: Request, res: Response) => {
     const userId = user.dataValues.id;
     const hashedPassword = user.dataValues.password;
     const userRole = user.dataValues.role;
+    const userEmail = user.dataValues.email;
     const isPasswordMatch = decryptPassword(hashedPassword);
     if (isPasswordMatch === password) {
       const token = jwt.sign(
-        { id: userId, role: userRole },
+        { id: userId, role: userRole, email: userEmail },
         process.env.JWT_SECRET!,
         { expiresIn: "1h" },
       );
